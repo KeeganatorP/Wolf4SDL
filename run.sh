@@ -1,0 +1,1 @@
+../ryujinx/Ryujinx.exe ./Wolf4SDL.nro

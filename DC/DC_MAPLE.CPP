@@ -4,7 +4,7 @@
 
 #if defined(_arch_dreamcast)
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include "dc/maple.h"
 #include "dc/maple/controller.h"
 #include "dc/maple/vmu.h"

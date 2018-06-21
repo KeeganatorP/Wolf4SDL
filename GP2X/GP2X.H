@@ -10,7 +10,7 @@
 #include "../wl_def.h"
 #if defined(GP2X_940)
 #include "fmopl.h"
-#include <SDL_gp2x.h>
+#include <SDL/SDL_gp2x.h>
 #endif
 
 #define GP2X_BUTTON_UP              (0)
