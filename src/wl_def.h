@@ -20,7 +20,7 @@
 #endif
 #include <SDL/SDL.h>
 
-#define SWDEBUG
+//#define SWDEBUG
 
 #ifdef SWDEBUG
 #include <switch.h>
