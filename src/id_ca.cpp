@@ -545,7 +545,7 @@ void CAL_SetupGrFile (void)
 
 void CAL_SetupMapFile (void)
 {
-    HARD_DBG("CA_SetupMapFile_Start\n");
+    printf("CA_SetupMapFile_Start\n");
     int     i;
     int handle;
     int32_t length,pos;
@@ -669,13 +669,13 @@ void CA_Startup (void)
     unlink ("PROFILE.TXT");
     profilehandle = open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
 #endif
-    HARD_DBG("CA_INIT\n");
+    printf("CA_INIT\n");
     CAL_SetupMapFile ();
-    HARD_DBG("CAL_SetupMapFile ();\n");
+    printf("CAL_SetupMapFile ();\n");
     CAL_SetupGrFile ();
-    HARD_DBG("CAL_SetupGrFile ();\n");
+    printf("CAL_SetupGrFile ();\n");
     CAL_SetupAudioFile ();
-    HARD_DBG("CAL_SetupAudioFile ();\n");
+    printf("CAL_SetupAudioFile ();\n");
 
     mapon = -1;
 }

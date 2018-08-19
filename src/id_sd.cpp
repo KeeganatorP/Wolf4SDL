@@ -875,7 +875,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             {
                 if(sqHackTime > alTimeCount) break;
                 sqHackTime = alTimeCount + *(sqHackPtr+1);
-                alOut(*(byte *) sqHackPtr, *(((byte *) sqHackPtr)+1));
+                alOut(*(byte *) sqHackPtr, *(((byte *) sqHackPtr)+1)); // play music
                 sqHackPtr += 2;
                 sqHackLen -= 4;
             }

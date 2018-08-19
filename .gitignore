@@ -40,3 +40,4 @@ Thumbs.db
 ###############################
 *.layout
 *.depend
+settings.json

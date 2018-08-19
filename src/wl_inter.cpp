@@ -313,18 +313,23 @@ Victory (void)
 void
 PG13 (void)
 {
+    printf("FADEOUT\n");
     VW_FadeOut ();
+    printf("BACKGROUND\n");
     VWB_Bar (0, 0, 320, 200, 0x82);     // background
-
+    printf("CACHE PIC\n");
     CA_CacheGrChunk (PG13PIC);
+    printf("DRAW PIC\n");
     VWB_DrawPic (216, 110, PG13PIC);
+    printf("Update Screen\n");
     VW_UpdateScreen ();
-
+    printf("UNCHACHE PIC\n");
     UNCACHEGRCHUNK (PG13PIC);
-
+    printf("FADEIN\n");
     VW_FadeIn ();
+    printf("CHECK USER INPUT\n");
     IN_UserInput (TickBase * 7);
-
+    printf("FADEOUT\n");
     VW_FadeOut ();
 }
 #endif

@@ -453,24 +453,169 @@ void PollControls (void)
 //
 // get button states
 //
-    PollKeyboardButtons ();
+    //PollKeyboardButtons ();
+    hidScanInput();
 
-    if (mouseenabled && IN_IsInputGrabbed())
+    u32 kDown = hidKeysHeld(CONTROLLER_P1_AUTO);
+
+    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+
+    if((kDown & KEY_A) || (kDown & KEY_ZR))
+        buttonstate[bt_attack] = true;
+
+    if((kDown & KEY_B))
+        buttonstate[bt_use] = true;
+
+    if((kDown & KEY_X))
+        buttonstate[bt_strafe] = true;
+
+    if((kDown & KEY_Y) || (kDown & KEY_ZL))
+        buttonstate[bt_run] = true;
+
+    if((kDown & KEY_R))
+        buttonstate[bt_nextweapon] = true;
+
+    if((kDown & KEY_L))
+        buttonstate[bt_prevweapon] = true;
+
+    if((kDown & KEY_MINUS))
+        buttonstate[bt_esc] = true;
+
+    if((kDown & KEY_PLUS))
+        buttonstate[bt_pause] = true;
+
+    /*if (mouseenabled && IN_IsInputGrabbed())
         PollMouseButtons ();
 
     if (joystickenabled)
-        PollJoystickButtons ();
+        PollJoystickButtons ();*/
 
 //
 // get movements
 //
-    PollKeyboardMove ();
 
-    if (mouseenabled && IN_IsInputGrabbed())
+    // keyboard movement code
+    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+
+    /*if((kDown & KEY_DUP))
+        buttonstate[bt_moveforward] = true;
+    if((kDown & KEY_DDOWN))
+        buttonstate[bt_movebackward] = true;
+    if((kDown & KEY_DLEFT))
+        buttonstate[bt_turnleft] = true;
+    if((kDown & KEY_DRIGHT))
+        buttonstate[bt_turnright] = true;*/
+
+    if((kDown & KEY_DUP))
+        controly -= delta;
+    if((kDown & KEY_DDOWN))
+        controly += delta;
+    if((kDown & KEY_DLEFT))
+        controlx -= delta;
+    if((kDown & KEY_DRIGHT))
+        controlx += delta;
+
+    JoystickPosition pos_left, pos_right;
+
+    //Read the joysticks' position
+    hidJoystickRead(&pos_left, CONTROLLER_P1_AUTO, JOYSTICK_LEFT);
+    hidJoystickRead(&pos_right, CONTROLLER_P1_AUTO, JOYSTICK_RIGHT);
+    float turnspeed = 0;
+    float movespeed = 0;
+
+    int JOYSTICK_DEAD_ZONE = 3000;
+    int JOYSTICK_MAX_ZONE = 30000;
+
+    if( pos_left.dx < 0)
+    {
+        buttonstate[bt_strafeleft] = true;
+    }
+    else if( pos_left.dx > 0)
+    {
+        buttonstate[bt_straferight] = true;
+    }
+    if( pos_left.dy < -JOYSTICK_DEAD_ZONE)
+    {
+        movespeed = floor((float)((float)pos_left.dy/(float)32767)*(float)35);
+        if( pos_left.dy < -JOYSTICK_MAX_ZONE )
+        {
+            movespeed = -35;
+        }
+        delta = buttonstate[bt_run] ? (movespeed*2) * tics : movespeed * tics;
+        controly -= delta;
+    }
+    if( pos_left.dy > JOYSTICK_DEAD_ZONE)
+    {
+        movespeed = floor((float)((float)-pos_left.dy/(float)32767)*(float)35);
+        if( pos_left.dy > JOYSTICK_MAX_ZONE)
+        {
+            movespeed = -35;
+        }
+        delta = buttonstate[bt_run] ? (movespeed*2) * tics : movespeed * tics;
+        controly += delta;
+    }
+    if( pos_right.dx < -JOYSTICK_DEAD_ZONE)
+    {
+        turnspeed = floor((float)((float)-pos_right.dx/(float)32767)*(float)35);
+        if( pos_right.dx < -JOYSTICK_MAX_ZONE)
+        {
+            turnspeed = 35;
+        }
+        delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
+        controlx -= delta;
+    }
+    else if( pos_right.dx > JOYSTICK_DEAD_ZONE)
+    {
+        turnspeed = floor((float)((float)pos_right.dx/(float)32767)*(float)35);
+        if( pos_right.dx > JOYSTICK_MAX_ZONE)
+        {
+            turnspeed = 35;
+        }
+        delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
+        controlx += delta;
+    }
+
+    
+    
+
+    /*if((kDown & KEY_LSTICK_LEFT) && !(kDown & KEY_X))
+        buttonstate[bt_strafeleft] = true;
+    else if((kDown & KEY_LSTICK_LEFT) && (kDown & KEY_X))
+        controlx -= delta;
+    if((kDown & KEY_LSTICK_RIGHT))
+        buttonstate[bt_straferight] = true;
+    else if((kDown & KEY_LSTICK_RIGHT) && (kDown & KEY_X))
+        controlx += delta;
+
+    if((kDown & KEY_RSTICK_LEFT))
+        controlx -= delta;
+    if((kDown & KEY_RSTICK_RIGHT))
+        controlx += delta;
+
+
+        */
+    /*if((kDown & KEY_LSITCK_DUP))
+        controly -= delta;
+    if((kDown & KEY_LSITCK_DUP))
+        controly -= delta;*/
+
+    /*if (Keyboard[dirscan[di_north]])
+        controly -= delta;
+    if (Keyboard[dirscan[di_south]])
+        controly += delta;
+    if (Keyboard[dirscan[di_west]])
+        controlx -= delta;
+    if (Keyboard[dirscan[di_east]])
+        controlx += delta;*/
+
+
+    //PollKeyboardMove ();
+
+    /*if (mouseenabled && IN_IsInputGrabbed())
         PollMouseMove ();
 
     if (joystickenabled)
-        PollJoystickMove ();
+        PollJoystickMove ();*/
 
 //
 // bound movement to a maximum
@@ -664,7 +809,7 @@ void CheckKeys (void)
 //
 // pause key weirdness can't be checked as a scan code
 //
-    if(buttonstate[bt_pause]) Paused = true;
+    if(buttonstate[bt_pause]) Paused = true;              // PAUSE GAME CODE //
     if(Paused)
     {
         int lastoffs = StopMusic();
@@ -686,7 +831,7 @@ void CheckKeys (void)
 #ifndef DEBCHECK
            scan == sc_F10 ||
 #endif
-           scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
+           scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog // RETURN TO MENU (QUICK) CODE //
     {
         short oldmapon = gamestate.mapon;
         short oldepisode = gamestate.episode;
@@ -701,7 +846,7 @@ void CheckKeys (void)
         return;
     }
 
-    if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc])
+    if (buttonstate[bt_esc])         // RETURN TO MENU (FADE) CODE //
     {
         int lastoffs = StopMusic ();
         ClearMemory ();
@@ -1261,7 +1406,7 @@ int32_t funnyticount;
 
 void PlayLoop (void)
 {
-    HARD_DBG("PLAY LOOP START\n");
+    printf("PLAY LOOP START\n");
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
     if(GetFeatureFlags() & FF_CLOUDSKY)
         InitSky();
@@ -1286,7 +1431,7 @@ void PlayLoop (void)
     if (demoplayback)
         IN_StartAck ();
 
-    HARD_DBG("LOOP HERE\n");
+    printf("LOOP HERE\n");
     do
     {
         PollControls ();

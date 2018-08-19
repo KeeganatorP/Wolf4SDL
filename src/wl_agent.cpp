@@ -172,15 +172,37 @@ void ControlMovement (objtype *ob)
     oldx = player->x;
     oldy = player->y;
 
+    JoystickPosition pos_left, pos_right;
+
+    //Read the joysticks' position
+    hidJoystickRead(&pos_left, CONTROLLER_P1_AUTO, JOYSTICK_LEFT);
+    hidJoystickRead(&pos_right, CONTROLLER_P1_AUTO, JOYSTICK_RIGHT);
+
+    float strafespeed = 0;
+    int JOYSTICK_DEAD_ZONE = 3000;
+    int JOYSTICK_MAX_ZONE = 30000;
+    if( pos_left.dx < -JOYSTICK_DEAD_ZONE)
+    {
+        strafespeed = floor((float)((float)-pos_left.dx/(float)32767)*(float)35);
+    }
+    if( pos_left.dx > JOYSTICK_DEAD_ZONE)
+    {
+        strafespeed = floor((float)((float)pos_left.dx/(float)32767)*(float)35);
+    }
+    if( pos_left.dx < -JOYSTICK_MAX_ZONE || pos_left.dx > JOYSTICK_MAX_ZONE)
+    {
+        strafespeed = 35;
+    }
+
     if(buttonstate[bt_strafeleft])
     {
         angle = ob->angle + ANGLES/4;
         if(angle >= ANGLES)
             angle -= ANGLES;
         if(buttonstate[bt_run])
-            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+            Thrust(angle, (strafespeed*2) * MOVESCALE * tics);
         else
-            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+            Thrust(angle, strafespeed * MOVESCALE * tics);
     }
 
     if(buttonstate[bt_straferight])
@@ -189,9 +211,9 @@ void ControlMovement (objtype *ob)
         if(angle < 0)
             angle += ANGLES;
         if(buttonstate[bt_run])
-            Thrust(angle, RUNMOVE * MOVESCALE * tics );
+            Thrust(angle, (strafespeed*2) * MOVESCALE * tics );
         else
-            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+            Thrust(angle, strafespeed * MOVESCALE * tics);
     }
 
     //

@@ -19,17 +19,7 @@
 #	include <stdarg.h>
 #endif
 #include <SDL/SDL.h>
-
-//#define SWDEBUG
-
-#ifdef SWDEBUG
 #include <switch.h>
-#define DBG(...) { char buffer[500]; sprintf(buffer,__VA_ARGS__); svcOutputDebugString(buffer,strlen(buffer)); printf(__VA_ARGS__); }
-#define HARD_DBG(...) { char buffer[500]; sprintf(buffer,__VA_ARGS__); svcOutputDebugString(buffer,strlen(buffer)); FILE * fp=fopen("/switch/wolf4sdl/dbg.txt","a"); fprintf(fp,__VA_ARGS__); fclose(fp);}
-#else
-#  define DBG(...) ;
-#  define HARD_DBG(...) ;
-#endif
 
 #if !defined O_BINARY
 #	define O_BINARY 0
@@ -830,18 +820,18 @@ typedef struct objstruct
 enum
 {
     bt_nobutton=-1,
-    bt_attack=0,
-    bt_strafe,
-    bt_run,
-    bt_use,
+    bt_attack=0, // done
+    bt_strafe, // done
+    bt_run, // done
+    bt_use, // done
     bt_readyknife,
     bt_readypistol,
     bt_readymachinegun,
     bt_readychaingun,
-    bt_nextweapon,
-    bt_prevweapon,
-    bt_esc,
-    bt_pause,
+    bt_nextweapon, // done
+    bt_prevweapon, // done
+    bt_esc, // done
+    bt_pause, // done
     bt_strafeleft,
     bt_straferight,
     bt_moveforward,

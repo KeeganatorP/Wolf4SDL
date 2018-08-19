@@ -1210,7 +1210,7 @@ static void InitGame()
 #ifndef SPEARDEMO
     boolean didjukebox=false;
 #endif
-    HARD_DBG("GAME START");
+    printf("GAME START");
     // initialize SDL
 /*#if defined _WIN32
     putenv("SDL_VIDEODRIVER=directx");
@@ -1221,7 +1221,7 @@ static void InitGame()
         exit(1);
     }
     atexit(SDL_Quit);
-    HARD_DBG("SDL INITIALISED");
+    printf("SDL INITIALISED");
     int numJoysticks = SDL_NumJoysticks();
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
     {
@@ -1255,19 +1255,19 @@ static void InitGame()
 #endif*/
 	VW_UpdateScreen();
 
-    HARD_DBG("VW_UpdateScreen DONE\n");
+    printf("VW_UpdateScreen DONE\n");
     VH_Startup ();
-    HARD_DBG("VH DONE\n");
+    printf("VH DONE\n");
     IN_Startup ();
-    HARD_DBG("IN DONE\n");
+    printf("IN DONE\n");
     PM_Startup ();
-    HARD_DBG("RM DONE\n");
+    printf("RM DONE\n");
     SD_Startup ();
-    HARD_DBG("SD DONE\n");
+    printf("SD DONE\n");
     CA_Startup ();
-    HARD_DBG("CA DONE\n");
+    printf("CA DONE\n");
     US_Startup ();
-    HARD_DBG("US DONE\n");
+    printf("US DONE\n");
 
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
@@ -1439,7 +1439,7 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
-    HARD_DBG(errorStr);
+    printf(errorStr);
 #ifdef NOTYET
     byte *screen;
 #endif
@@ -1550,8 +1550,8 @@ static void DemoLoop()
         gamestate.episode = 0;
         gamestate.mapon = param_tedlevel;
 #endif
-        HARD_DBG("BEFORE GAME LOOP\n");
-        GameLoop();
+        printf("BEFORE GAME LOOP\n");
+        GameLoop(); // start game skipping intro
         Quit (NULL);
     }
 
@@ -1581,12 +1581,15 @@ static void DemoLoop()
         #endif
         #endif
     #endif
-
+    printf("START MUSIC\n");
     StartCPMusic(INTROSONG);
 
 #ifndef JAPAN
     if (!param_nowait)
+    {
+        printf("SHOW PG\n");
         PG13 ();
+    }
 #endif
 
 #endif
@@ -1617,6 +1620,7 @@ static void DemoLoop()
 
             UNCACHEGRCHUNK (TITLEPALETTE);
 #else
+            printf("SHOW TITLE\n");
             CA_CacheScreen (TITLEPIC);
             VW_UpdateScreen ();
             VW_FadeIn();
@@ -1627,6 +1631,7 @@ static void DemoLoop()
 //
 // credits page
 //
+            printf("SHOW CREDITS\n");
             CA_CacheScreen (CREDITSPIC);
             VW_UpdateScreen();
             VW_FadeIn ();
@@ -1636,6 +1641,7 @@ static void DemoLoop()
 //
 // high scores
 //
+            printf("SHOW HIGH SCORES\n");
             DrawHighScores ();
             VW_UpdateScreen ();
             VW_FadeIn ();
@@ -1646,7 +1652,7 @@ static void DemoLoop()
 //
 // demo
 //
-
+            printf("SHOW DEMO\n");
             #ifndef SPEARDEMO
             PlayDemo (LastDemo++%4);
             #else
@@ -1671,10 +1677,11 @@ static void DemoLoop()
 #else
         US_ControlPanel (0);
 #endif
+        printf("END SPLASHSCREENS\n");
 
         if (startgame || loadedgame)
         {
-            GameLoop ();
+            GameLoop (); // true start game
             if(!param_nowait)
             {
                 VW_FadeOut();
@@ -1958,19 +1965,28 @@ void CheckParameters(int argc, char *argv[])
 
 int main (int argc, char *argv[])
 {
-    HARD_DBG("MAIN ENTRY\n");
+    // nxlink
+    socketInitializeDefault();
+	nxlinkStdio();
+
+    /* emulator
+    consoleDebugInit(debugDevice_SVC);
+	stdout = stderr; */
+
+	printf("nxlink printf\n");
+    printf("MAIN ENTRY\n");
 #if defined(_arch_dreamcast)
     DC_Init();
 #else
     CheckParameters(argc, argv);
 #endif
-    HARD_DBG("CheckParameters() DONE\n");
+    printf("CheckParameters() DONE\n");
     CheckForEpisodes();
-    HARD_DBG("CheckForEpisodes() DONE\n");
+    printf("CheckForEpisodes() DONE\n");
     InitGame();
-    HARD_DBG("InitGame() DONE\n");
+    printf("InitGame() DONE\n");
     DemoLoop();
-    HARD_DBG("DemoLoop() DONE\n");
+    printf("DemoLoop() DONE\n");
     Quit("Demo loop exited???");
     return 1;
 }

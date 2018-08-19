@@ -14,16 +14,19 @@ Sound currently has issues which causes popping and crackling.
 ## Controls
 
 | Keys        | Controls           |
-| ------------- |:-------------:|
-| Up      | Forward |
-| Down      | Back |
-| Left | Turn Left |
-| Right | Turn Right |
+| :-------------: |:-------------:|
+| D-Pad Up | Forward |
+| D-Pad Down | Back |
+| D-Pad Left | Turn Left |
+| D-Pad Right | Turn Right |
 | Minus | Return to Menu/ESC |
-| A      | Fire/OK |
-| B      | Open |
-| X | Strafe |
-| Y | Run |
+| Plus | Pause |
+| A / ZR | Fire/OK |
+| B | Open |
+| X | Strafe/Turn |
+| Y / ZL | Run |
+| L | Previous Weapon |
+| R | Next Weapon |
 
 ## Compiling
 

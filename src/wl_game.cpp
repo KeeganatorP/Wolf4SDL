@@ -1369,7 +1369,7 @@ void Died (void)
 void GameLoop (void)
 {
     boolean died;
-    HARD_DBG("START GAME\n");
+    printf("START GAME\n");
 #ifdef MYPROFILE
     clock_t start,end;
 #endif
